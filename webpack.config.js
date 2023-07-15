@@ -2,6 +2,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
+  entry: './src/index.js',
+  devServer: {
+    open: true,
+    host: 'localhost',
+  },
   module: {
     rules: [
       {
