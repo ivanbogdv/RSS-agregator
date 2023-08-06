@@ -1,25 +1,25 @@
 export default (elements, i18nInstance) => (path, value) => {
-  elements.input.classList.remove('is-invalid'); // Удаляем классы
+  elements.input.classList.remove('is-invalid');
   elements.feedback.classList.remove('text-success', 'text-danger');
-  elements.feedback.textContent = ''; // Очищается текстовое содержимое
+  elements.feedback.textContent = '';
 
   switch (path) {
     case 'urls':
-      elements.input.classList.remove('is-invalid'); // Удаляем классы
+      elements.input.classList.remove('is-invalid');
       elements.feedback.classList.remove('text-danger');
-      elements.feedback.classList.add('text-success'); // Новые классы
-      elements.feedback.textContent = i18nInstance.t('success');
+      elements.feedback.classList.add('text-success');
+      elements.feedback.textContent = i18nInstance.t('success'); // Исправлено
       break;
 
     case 'form.url':
-      elements.input.value = value; // Отобразить введенное пользователем значение
+      elements.input.value = value;
       break;
 
     case 'form.error':
-      elements.input.classList.add('is-invalid'); // Удаляем классы
+      elements.input.classList.add('is-invalid');
       elements.feedback.classList.remove('text-success');
-      elements.feedback.classList.add('text-danger'); // Новые классы
-      elements.feedback.textContent = i18nInstance.t(value.message);
+      elements.feedback.classList.add('text-danger');
+      elements.feedback.textContent = i18nInstance.t(value.message); // Исправлено
       break;
 
     default:
