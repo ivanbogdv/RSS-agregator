@@ -39,17 +39,18 @@ const createPosts = (state, newPosts, feedId) => {
 };
 
 // Функция для получения новых постов с помощью Axios
-const getNewPosts = (state) => state.content.feeds.map(({ link, feedId }) => getAxiosResponse(link).then((response) => {
-  const { posts } = parser(response.data.contents);
-  const addedPostsLinks = state.content.posts.map((post) => post.link);
-  const newPosts = posts.filter(
-    (post) => !addedPostsLinks.includes(post.link),
-  );
-  if (newPosts.length > 0) {
-    createPosts(state, newPosts, feedId);
-  }
-  return Promise.resolve();
-}));
+const getNewPosts = (state) => {
+  const allFeeds = state.content.feeds;
+  allFeeds.map(({ link, feedId }) => getAxiosResponse(link).then((response) => {
+    const { posts } = parser(response.data.contents);
+    const addedPosts = state.content.posts.map((post) => post.link);
+    const newPosts = posts.filter((post) => !addedPosts.includes(post.link));
+    if (newPosts.length > 0) {
+      createPosts(state, newPosts, feedId);
+    }
+    return Promise.resolve();
+  }));
+};
 
 export default () => {
   // Язык по умолчанию для i18next
@@ -118,7 +119,7 @@ export default () => {
         // Обновляем состояние при вводе данных
         watchedState.process.processState = 'filling';
         watchedState.inputValue = e.target.value;
-        console.log('TEST MESSEGE!!!');
+        // console.log('TEST MESSEGE!!!');
       });
 
       // Слушаем событие отправки формы
@@ -140,7 +141,7 @@ export default () => {
             // Обработка ответа и добавление новых данных
             const data = response.data.contents;
             const { feed, posts } = parser(data, i18nInstance, elements);
-            console.log('parser');
+            // console.log('parser');
             const feedId = uniqueId();
 
             // Добавляем новый фид и посты в состояние
@@ -153,12 +154,12 @@ export default () => {
 
             // Обновляем состояние после успешного завершения
             watchedState.process.processState = 'finished';
-            console.log('finished!!!');
+            // console.log('finished!!!');
           })
           .catch((error) => {
             // Обработка ошибок
             watchedState.valid = false;
-            console.log(error.message);
+            // console.log(error.message);
             watchedState.process.error = error.message ?? 'defaultError';
             watchedState.process.processState = 'error';
           });
