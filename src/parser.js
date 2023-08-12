@@ -4,10 +4,10 @@ export default (data) => {
   // Парсим переданные данные и получаем DOM-документ
   const parsedData = parser.parseFromString(data, 'application/xml');
 
-  // Проверяем, есть ли ошибка в парсинге, и если да, выбрасываем ошибку parseError
+  // Проверяем, есть ли ошибка в парсинге, и если да, выбрасываем ошибку noRSS
   const error = parsedData.querySelector('parsererror');
   if (error) {
-    throw new Error('parseError');
+    throw new Error('noRSS');
   }
 
   // Извлекаем информацию о канале (feed) из DOM-документа

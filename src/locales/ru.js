@@ -2,9 +2,10 @@ export default {
   translation: {
     posts: 'Посты',
     feeds: 'Фиды',
-    success: 'RSS успешно загружен',
+    sucсess: 'RSS успешно загружен',
+    button: 'Просмотр',
     errors: {
-      url: 'Ссылка должна быть валидным URL',
+      urlError: 'Ссылка должна быть валидным URL',
       exist: 'RSS уже существует',
       noRSS: 'Ресурс не содержит валидный RSS',
       NetworkError: 'Ошибка сети',

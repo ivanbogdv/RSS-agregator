@@ -141,7 +141,10 @@ export default () => {
             // Обработка ответа и добавление новых данных
             const data = response.data.contents;
             const { feed, posts } = parser(data, i18nInstance, elements);
-            // console.log('parser');
+
+            console.log(feed);
+            console.log(posts);
+
             const feedId = uniqueId();
 
             // Добавляем новый фид и посты в состояние
@@ -154,7 +157,6 @@ export default () => {
 
             // Обновляем состояние после успешного завершения
             watchedState.process.processState = 'finished';
-            // console.log('finished!!!');
           })
           .catch((error) => {
             // Обработка ошибок
