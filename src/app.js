@@ -38,18 +38,28 @@ const createPosts = (state, newPosts, feedId) => {
   state.content.posts = [...state.content.posts, ...preparedPosts];
 };
 
-// Функция для получения новых постов с помощью Axios
+// Функция для получения новых постов с помощью Axios, c setTimeout 5 сек.
+const timeout = 5000;
 const getNewPosts = (state) => {
   const allFeeds = state.content.feeds;
-  allFeeds.map(({ link, feedId }) => getAxiosResponse(link).then((response) => {
-    const { posts } = parser(response.data.contents);
-    const addedPosts = state.content.posts.map((post) => post.link);
-    const newPosts = posts.filter((post) => !addedPosts.includes(post.link));
-    if (newPosts.length > 0) {
-      createPosts(state, newPosts, feedId);
-    }
-    return Promise.resolve();
-  }));
+  allFeeds
+    .map(({ link, feedId }) => getAxiosResponse(link)
+      .then((response) => {
+        const { posts } = parser(response.data.contents);
+        const addedPosts = state.content.posts.map((post) => post.link);
+        const newPosts = posts.filter((post) => !addedPosts.includes(post.link));
+        if (newPosts.length > 0) {
+          console.log(newPosts);
+          createPosts(state, newPosts, feedId);
+        }
+        return Promise.resolve();
+      }));
+
+  Promise.allSettled(allFeeds)
+    .finally(() => {
+      console.log('Проверочка');
+      setTimeout(() => getNewPosts(state), timeout);
+    });
 };
 
 export default () => {
