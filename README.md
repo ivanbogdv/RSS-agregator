@@ -9,7 +9,7 @@
 
 ### Description
 
-The "RSS Aggregator" program is a tool for collecting and presenting content from websites using RSS feeds. It allows users to subscribe to various feeds from different sources and receive updates about new posts. The program automatically gathers posts and headlines from selected feeds, providing users with a convenient way to stay informed about current information from multiple sources in one place.
+The "RSS aggregator" program is a tool for collecting and presenting content from websites using RSS feeds. It allows users to subscribe to various feeds from different sources and receive updates about new posts. The program automatically gathers posts and headlines from selected feeds, providing users with a convenient way to stay informed about current information from multiple sources in one place.
 
 ### Install
 ```bash
