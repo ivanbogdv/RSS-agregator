@@ -104,7 +104,7 @@ export default () => {
         },
         uiState: {
           alreadyVisitedLink: new Set(),
-          modaID: '',
+          modalId: '',
         },
       };
 
@@ -181,11 +181,18 @@ export default () => {
           });
       });
 
+      // подсветка уже открытых ссылок
+      elements.posts.addEventListener('click', (e) => {
+        const currentPostId = e.target.dataset.id;
+        watchedState.uiState.alreadyVisitedLink.add(currentPostId);
+      });
+
       // обработчик событий при открытии модального окна
       elements.modal.modalWindow.addEventListener('show.bs.modal', (e) => {
         const currentPostId = e.relatedTarget.getAttribute('data-id');
+        console.log(`check ID: ${currentPostId}`);
         watchedState.uiState.alreadyVisitedLink.add(currentPostId);
-        watchedState.uiState.modalID = currentPostId;
+        watchedState.uiState.modalId = currentPostId;
       });
     });
 };
