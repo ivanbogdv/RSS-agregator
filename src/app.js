@@ -102,6 +102,10 @@ export default () => {
           posts: [],
           feeds: [],
         },
+        uiState: {
+          alreadyVisitedLink: new Set(),
+          modaID: '',
+        },
       };
 
       // Создаем прослушиваемое состояние через библиотеку onChange
@@ -175,6 +179,13 @@ export default () => {
             watchedState.process.error = error.message ?? 'defaultError';
             watchedState.process.processState = 'error';
           });
+      });
+
+      // обработчик событий при открытии модального окна
+      elements.modal.modalWindow.addEventListener('show.bs.modal', (e) => {
+        const currentPostId = e.relatedTarget.getAttribute('data-id');
+        watchedState.uiState.alreadyVisitedLink.add(currentPostId);
+        watchedState.uiState.modalID = currentPostId;
       });
     });
 };
