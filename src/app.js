@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import i18next from 'i18next';
 import axios from 'axios';
 import onChange from 'on-change';
@@ -49,7 +50,6 @@ const getNewPosts = (state) => {
         const addedPosts = state.content.posts.map((post) => post.link);
         const newPosts = posts.filter((post) => !addedPosts.includes(post.link));
         if (newPosts.length > 0) {
-          console.log(newPosts);
           createPosts(state, newPosts, feedId);
         }
         return Promise.resolve();
@@ -57,7 +57,6 @@ const getNewPosts = (state) => {
 
   Promise.allSettled(allFeeds)
     .finally(() => {
-      console.log('Проверочка');
       setTimeout(() => getNewPosts(state), timeout);
     });
 };
@@ -133,7 +132,6 @@ export default () => {
         // Обновляем состояние при вводе данных
         watchedState.process.processState = 'filling';
         watchedState.inputValue = e.target.value;
-        // console.log('TEST MESSEGE!!!');
       });
 
       // Слушаем событие отправки формы
@@ -156,9 +154,6 @@ export default () => {
             const data = response.data.contents;
             const { feed, posts } = parser(data, i18nInstance, elements);
 
-            console.log(feed);
-            console.log(posts);
-
             const feedId = uniqueId();
 
             // Добавляем новый фид и посты в состояние
@@ -175,7 +170,6 @@ export default () => {
           .catch((error) => {
             // Обработка ошибок
             watchedState.valid = false;
-            // console.log(error.message);
             watchedState.process.error = error.message ?? 'defaultError';
             watchedState.process.processState = 'error';
           });
@@ -190,7 +184,6 @@ export default () => {
       // обработчик событий при открытии модального окна
       elements.modal.modalWindow.addEventListener('show.bs.modal', (e) => {
         const currentPostId = e.relatedTarget.getAttribute('data-id');
-        console.log(`check ID: ${currentPostId}`);
         watchedState.uiState.alreadyVisitedLink.add(currentPostId);
         watchedState.uiState.modalId = currentPostId;
       });
