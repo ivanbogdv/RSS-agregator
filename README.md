@@ -19,4 +19,4 @@ make build
 ```
 
 ### Demo
-<code>[RSS agregator](https://frontend-project-11-549hhuhwh-ivanbogdv.vercel.app/)</code> 
+<code>[RSS agregator](https://frontend-project-11-e9dw.vercel.app/)</code> 
