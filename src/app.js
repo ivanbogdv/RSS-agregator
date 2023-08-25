@@ -9,7 +9,6 @@ import resources from './locales/index.js';
 import render from './view.js';
 import parser from './parser.js';
 
-// Функция для валидации URL
 const validate = (url, urlList) => {
   const schema = string()
     .trim()
@@ -19,7 +18,6 @@ const validate = (url, urlList) => {
   return schema.validate(url);
 };
 
-// Функция для получения данных по URL с помощью Axios
 const getAxiosResponse = (url) => {
   const allOrigins = 'https://allorigins.hexlet.app/get';
   const newUrl = new URL(allOrigins);
@@ -28,18 +26,16 @@ const getAxiosResponse = (url) => {
   return axios.get(newUrl);
 };
 
-// Функция для создания постов
 const createPosts = (state, newPosts, feedId) => {
   const preparedPosts = newPosts.map((post) => ({
     ...post,
     feedId,
     id: uniqueId(),
   }));
-  // Обновляем состояние добавлением новых постов
+
   state.content.posts = [...state.content.posts, ...preparedPosts];
 };
 
-// Функция для получения новых постов с помощью Axios, c setTimeout 5 сек.
 const timeout = 5000;
 const getNewPosts = (state) => {
   const allFeeds = state.content.feeds;
@@ -62,9 +58,8 @@ const getNewPosts = (state) => {
 };
 
 export default () => {
-  // Язык по умолчанию для i18next
   const defaultLanguage = 'ru';
-  // Создаем экземпляр i18n для локализации
+
   const i18nInstance = i18next.createInstance();
   i18nInstance
     .init({
@@ -73,7 +68,6 @@ export default () => {
       resources,
     })
     .then(() => {
-      // Получаем элементы DOM
       const elements = {
         form: document.querySelector('.rss-form'),
         input: document.querySelector('input[id="url-input"]'),
@@ -89,7 +83,6 @@ export default () => {
         },
       };
 
-      // Начальное состояние приложения
       const initialState = {
         inputValue: '',
         valid: true,
@@ -107,16 +100,13 @@ export default () => {
         },
       };
 
-      // Создаем прослушиваемое состояние через библиотеку onChange
       const watchedState = onChange(
         initialState,
         render(elements, initialState, i18nInstance),
       );
 
-      // Получаем новые посты и обновляем состояние
       getNewPosts(watchedState);
 
-      // Устанавливаем локализацию для Yup
       setLocale({
         mixed: {
           notOneOf: 'exist',
@@ -126,37 +116,29 @@ export default () => {
         },
       });
 
-      // Слушаем событие ввода в форме
       elements.form.addEventListener('input', (e) => {
         e.preventDefault();
-        // Обновляем состояние при вводе данных
         watchedState.process.processState = 'filling';
         watchedState.inputValue = e.target.value;
       });
 
-      // Слушаем событие отправки формы
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
-        // Получаем список существующих URL-ов
         const urlList = watchedState.content.feeds.map(({ link }) => link);
 
-        // Валидация URL
         validate(watchedState.inputValue, urlList)
           .then(() => {
-            // Обновляем состояние перед отправкой запроса
             watchedState.valid = true;
             watchedState.process.processState = 'sending';
             return getAxiosResponse(watchedState.inputValue);
           })
 
           .then((response) => {
-            // Обработка ответа и добавление новых данных
             const data = response.data.contents;
             const { feed, posts } = parser(data, i18nInstance, elements);
 
             const feedId = uniqueId();
 
-            // Добавляем новый фид и посты в состояние
             watchedState.content.feeds.push({
               ...feed,
               feedId,
@@ -164,24 +146,20 @@ export default () => {
             });
             createPosts(watchedState, posts, feedId);
 
-            // Обновляем состояние после успешного завершения
             watchedState.process.processState = 'finished';
           })
           .catch((error) => {
-            // Обработка ошибок
             watchedState.valid = false;
             watchedState.process.error = error.message ?? 'defaultError';
             watchedState.process.processState = 'error';
           });
       });
 
-      // подсветка уже открытых ссылок
       elements.posts.addEventListener('click', (e) => {
         const currentPostId = e.target.dataset.id;
         watchedState.uiState.alreadyVisitedLink.add(currentPostId);
       });
 
-      // обработчик событий при открытии модального окна
       elements.modal.modalWindow.addEventListener('show.bs.modal', (e) => {
         const currentPostId = e.relatedTarget.getAttribute('data-id');
         watchedState.uiState.alreadyVisitedLink.add(currentPostId);
