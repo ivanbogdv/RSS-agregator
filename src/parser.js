@@ -1,12 +1,14 @@
 export default (data) => {
   const parser = new DOMParser();
+
   const parsedData = parser.parseFromString(data, 'application/xml');
 
   const parserError = parsedData.querySelector('parsererror');
   if (parserError) {
     const error = new Error(parserError.textContent);
-    error.isParserError = true;
-    throw error;
+    error.isParsingError = true;
+    error.parsedData = parsedData;
+    throw new Error('parsererror');
   }
 
   const channel = parsedData.querySelector('channel');
