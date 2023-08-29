@@ -38,8 +38,7 @@ const createPosts = (state, newPosts, feedId) => {
 
 const timeout = 5000;
 const getNewPosts = (state) => {
-  const allFeeds = state.content.feeds;
-  allFeeds
+  const promises = state.content.feeds
     .map(({ link, feedId }) => getAxiosResponse(link)
       .then((response) => {
         const { posts } = parser(response.data.contents);
@@ -51,7 +50,7 @@ const getNewPosts = (state) => {
         return Promise.resolve();
       }));
 
-  Promise.allSettled(allFeeds)
+  Promise.allSettled(promises)
     .finally(() => {
       setTimeout(() => getNewPosts(state), timeout);
     });
